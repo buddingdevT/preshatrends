@@ -743,7 +743,80 @@
   .header-menu .menu-list__submenu[data-active] {
     content-visibility: visible;
   }
+
+  /* ============================================================
+     Presha Trends — Header Brand Styles
+     Logo: Cormorant Garamond | Nav links: Jost | Hover: Burgundy
+  ============================================================ */
+
+  /* Logo: Cormorant Garamond wordmark — overrides Horizon's body font fallback */
+  a.header-logo {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 1.35rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.05em !important;
+    font-style: normal !important;
+  }
+
+  /* Nav links: Jost, 13px, clean letter-spacing */
+  .menu-list__link,
+  .menu-list__link-title {
+    font-family: 'Jost', sans-serif !important;
+    font-size: 0.8125rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: none !important;
+    transition: color 0.2s ease !important;
+  }
+
+  /* Nav hover: burgundy — replaces Horizon's default opacity dimming */
+  .menu-list .menu-list__list-item:where(:hover, :focus-within) .menu-list__link,
+  .menu-list .menu-list__list-item[slot='overflow'] .menu-list__link[aria-expanded='true'] {
+    color: #6B1A2A !important;
+    opacity: 1 !important;
+  }
+
+  /* Active/current page nav link */
+  .menu-list__link--active,
+  .menu-list__link--active .menu-list__link-title {
+    color: #6B1A2A !important;
+  }
+
+  /* Wishlist icon — match Horizon's other header action icon sizing */
+  .header-actions__wishlist .svg-wrapper {
+    height: var(--button-size);
+    width: var(--button-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-actions__wishlist svg {
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+  }
+
+  /* Wishlist hover: burgundy to match nav */
+  .header-actions__wishlist:hover {
+    color: #6B1A2A !important;
+    opacity: 1 !important;
+  }
 {% endstylesheet %}
+
+{% comment %} GSAP: Header entrance — subtle fade + drop after announcement bar {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof gsap === 'undefined') return;
+    gsap.from('#header-component', {
+      y: -20,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power2.out',
+      delay: 0.35,
+      clearProps: 'transform,opacity'
+    });
+  });
+</script>
 
 {% unless request.design_mode %}
   <script type="module">

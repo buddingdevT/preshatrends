@@ -77,6 +77,17 @@
     </dialog-component>
   {% endif %}
 
+  {% comment %} Wishlist — static icon placeholder, no functionality yet {% endcomment %}
+  <a
+    href="/pages/wishlist"
+    class="button header-actions__action header-actions__wishlist button-unstyled"
+    aria-label="Wishlist"
+  >
+    <span class="svg-wrapper" aria-hidden="true">
+      {{ 'icon-wishlist.svg' | inline_asset_content }}
+    </span>
+  </a>
+
   {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
     <script
       src="{{ 'cart-drawer.js' | asset_url }}"
