@@ -79,9 +79,42 @@
 
 ---
 
+---
+
+### ✅ Task 4 — Hero Section
+**Commit:** `worked on hero section`
+**Files changed:**
+- `templates/index.json`
+- `sections/hero.liquid`
+
+**What was done:**
+- **Disabled** the old slideshow section (`slideshow_thBVtw`) — preserved in JSON but hidden from storefront
+- **Enabled** the hero section (`hero_jVaWmY`) and moved it to first position on the homepage
+- **Hero content** (all configured via `index.json` blocks):
+  - Eyebrow: "SHOP" — Jost, 11px, uppercase, wide letter-spacing, white
+  - Headline: "The Dubai Edit" — `<h1>`, styled via CSS to Cormorant Garamond `clamp(2.75rem–4.5rem)`, white, weight 500
+  - Subtitle: "Curated luxury streetwear and rare sneakers from the world's most sought-after brands." — Jost, 15px, `#e8e8e8`
+  - CTAs in a `group` block (row layout): "Shop Now" (primary/burgundy) + "Explore Brands" (ghost/outline white)
+- **Hero settings:**
+  - `section_height: "large"` — tall viewport-filling hero
+  - `section_width: "page-width"` — content constrained, image full-bleed
+  - `color_scheme: "scheme-6"` — dark/white text
+  - `toggle_overlay: true`, `overlay_style: "gradient"`, `gradient_direction: "to right"` — dark on left (text side), transparent on right (model side), `#0a0a0ab3` (70% dark)
+  - Content: left-aligned column, `gap: 16`, `padding-block-end: 80`
+- **CSS additions to `sections/hero.liquid`:**
+  - `h1` → Cormorant Garamond, `clamp()` responsive size, weight 500
+  - `p` → Jost font, `line-height: 1.55`
+  - Primary `.button` → burgundy `#6B1A2A` fill, lightens to `#8a2135` on hover
+  - `.button-secondary` → ghost white, subtle hover background
+  - Mobile overrides: headline scales down, button padding adjusted
+- **GSAP animations:**
+  - Hero content blocks stagger up (`y: 40 → 0`, `opacity 0 → 1`) with `0.14s` stagger, `delay: 0.9s`
+  - Hero image (`hero__media-wrapper`) scales in from `1.06 → 1` over 1.6s (`power2.out`)
+- **Note:** Hero image still uses the old Goyard placeholder — upload the correct Dubai hero image via Shopify Admin → Online Store → Customize → Hero section → Media 1
+
 ## Upcoming Tasks
 
-- [ ] Hero Section
+- [ ] Hero Section (image upload needed in admin)
 - [ ] Category Pills
 - [ ] Collection / Category Page
 - [ ] Product Detail Page

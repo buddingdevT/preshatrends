@@ -535,6 +535,35 @@
   </div>
 </div>
 
+{% comment %} GSAP: Hero content blocks stagger in on page load {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof gsap === 'undefined') return;
+
+    var heroId = '#Hero-{{ section.id }}';
+    var contentWrapper = heroId + ' .hero__content-wrapper > *';
+
+    /* Stagger each content block (eyebrow, headline, subtitle, buttons) upward */
+    gsap.from(contentWrapper, {
+      y: 40,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.14,
+      ease: 'power3.out',
+      delay: 0.9,
+      clearProps: 'transform,opacity'
+    });
+
+    /* Hero image scales subtly in from slightly zoomed */
+    gsap.from(heroId + ' .hero__media-wrapper', {
+      scale: 1.06,
+      duration: 1.6,
+      ease: 'power2.out',
+      clearProps: 'transform'
+    });
+  });
+</script>
+
 {% stylesheet %}
   .hero-wrapper {
     --hero-height-offset: 0px;
@@ -752,6 +781,63 @@
         right: 0;
         left: auto;
       }
+    }
+  }
+
+  /* ============================================================
+     Presha Trends — Hero Section Brand Styles
+     Headline: Cormorant Garamond | Body: Jost | CTAs: Burgundy
+  ============================================================ */
+
+  /* Headline: large Cormorant Garamond editorial serif */
+  .hero__content-wrapper h1 {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: clamp(2.75rem, 5.5vw, 4.5rem) !important;
+    font-weight: 500 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.01em !important;
+    color: #ffffff !important;
+    margin-block: 0 !important;
+  }
+
+  /* Subtitle and body copy: Jost */
+  .hero__content-wrapper p {
+    font-family: 'Jost', sans-serif;
+    line-height: 1.55;
+  }
+
+  /* Primary CTA — Presha burgundy fill */
+  .hero .button:not(.button-secondary):not(.button-unstyled) {
+    background-color: #6B1A2A !important;
+    color: #ffffff !important;
+    border-color: #6B1A2A !important;
+  }
+
+  .hero .button:not(.button-secondary):not(.button-unstyled):hover {
+    background-color: #8a2135 !important;
+    border-color: #8a2135 !important;
+  }
+
+  /* Secondary CTA — ghost white outline */
+  .hero .button-secondary {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .hero .button-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  /* Mobile: ensure buttons stack naturally and fill width */
+  @media screen and (max-width: 749px) {
+    .hero__content-wrapper h1 {
+      font-size: clamp(2.25rem, 9vw, 3rem) !important;
+    }
+
+    .hero .button:not(.button-secondary):not(.button-unstyled),
+    .hero .button-secondary {
+      padding-inline: 1.25rem !important;
     }
   }
 {% endstylesheet %}
