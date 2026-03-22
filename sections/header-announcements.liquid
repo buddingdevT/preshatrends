@@ -284,13 +284,36 @@
 </aside>
 
 {% stylesheet %}
+  /* ============================================================
+     Presha Trends — Announcement Bar
+     Burgundy full-width strip with white Jost text.
+     Desktop: all 3 messages shown inline with pipe separators.
+     Mobile: messages rotate via Horizon's built-in slider.
+  ============================================================ */
+
   .announcement-bar {
     border-block-end: var(--border-bottom-width) solid var(--color-border);
     background-color: #6B1A2A !important;
+    /* Ensure the bar bleeds edge-to-edge regardless of section width setting */
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
   }
 
+  /* Force all child text to white */
+  .announcement-bar,
   .announcement-bar * {
     color: #FFFFFF !important;
+  }
+
+  /* Apply Jost font to announcement text */
+  .announcement-bar__text {
+    font-family: 'Jost', sans-serif !important;
+    font-size: 0.75rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.06em !important;
+    margin: 0 !important;
+    line-height: 1 !important;
   }
 
   .announcement-bar__slider {
@@ -304,6 +327,7 @@
     }
   }
 
+  /* Mobile: standard stacking slider */
   .announcement-bar__slides {
     display: grid;
     grid: [stack] auto / [stack] auto;
@@ -317,6 +341,7 @@
   }
 
   .announcement-bar__slide {
+    place-content: center;
     transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 
     &[aria-hidden='true'] {
@@ -325,6 +350,45 @@
     }
   }
 
+  /* Desktop: show all 3 messages simultaneously in a row with pipes */
+  @media screen and (min-width: 750px) {
+    .announcement-bar__slides {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      width: 100%;
+      gap: 0;
+    }
+
+    .announcement-bar__slide {
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* Pipe separator — appears before the 2nd and 3rd slides */
+    .announcement-bar__slide + .announcement-bar__slide::before {
+      content: '|';
+      display: inline-block;
+      padding: 0 16px;
+      opacity: 0.45;
+      color: #ffffff !important;
+      font-family: 'Jost', sans-serif !important;
+      font-size: 0.75rem !important;
+      font-weight: 300 !important;
+    }
+
+    /* Hide nav arrows on desktop — all items visible, no need */
+    .announcement-bar__slider .slideshow-control {
+      display: none !important;
+    }
+  }
+
+  /* Arrow styles (mobile only) */
   .announcement-bar__slider slideshow-arrows {
     padding: 0;
     mix-blend-mode: normal;
@@ -343,14 +407,6 @@
     justify-content: center;
     opacity: 1;
     animation: none;
-
-    @media screen and (min-width: 750px) {
-      --slideshow-control-offset: calc((var(--button-size) - var(--icon-size-xs)) / 2);
-
-      .section--page-width &.slideshow-control--previous {
-        transform: translateX(var(--slideshow-control-offset));
-      }
-    }
   }
 
   .announcement-bar__slider .slideshow-control .svg-wrapper {
@@ -358,19 +414,25 @@
     height: var(--icon-size-xs);
   }
 
-  .announcement-bar__slide {
-    place-content: center;
-  }
-
-  .announcement-bar__text:first-child {
-    margin: 0;
-  }
-
   .announcement-bar__link {
     position: absolute;
     inset: 0;
   }
 {% endstylesheet %}
+
+{% comment %} GSAP entrance animation — bar slides down from above on page load {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof gsap === 'undefined') return;
+    gsap.from('.announcement-bar', {
+      yPercent: -100,
+      opacity: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      clearProps: 'transform,opacity'
+    });
+  });
+</script>
 
 {% schema %}
 {
