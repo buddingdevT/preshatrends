@@ -112,9 +112,44 @@
   - Hero image (`hero__media-wrapper`) scales in from `1.06 → 1` over 1.6s (`power2.out`)
 - **Note:** Hero image still uses the old Goyard placeholder — upload the correct Dubai hero image via Shopify Admin → Online Store → Customize → Hero section → Media 1
 
+---
+
+### ✅ Task 5 — Hero Slideshow (Multi-Slide Carousel)
+**Commit:** `worked on hero slideshow`
+**Files changed:**
+- `sections/slideshow.liquid`
+- `templates/index.json`
+
+**What was done:**
+- **Disabled** the single static hero section (`hero_jVaWmY`) — preserved in JSON but hidden
+- **Re-enabled** and **rebuilt** the slideshow section (`slideshow_thBVtw`) as the new homepage hero
+- **Moved slideshow to first position** in `index.json` order array
+- **3 branded slides** with premium content structure:
+  - Slide 1: "The Dubai Edit" (Goyard image) — eyebrow "SHOP", CTA group row: "Shop Now" (burgundy) + "Explore Brands" (ghost)
+  - Slide 2: "Exclusive Drops" (Nike Mind image) — eyebrow "SNEAKERS", CTA "Shop Sneakers"
+  - Slide 3: "Premium Streetwear" (streetwear image) — eyebrow "STREETWEAR", CTA "Shop Streetwear"
+- **Slideshow settings:** `slide_height: "large"`, `autoplay: true`, `autoplay_speed: 6s`, `full_frame_on_mobile: true`, full-width
+- **CSS additions to `sections/slideshow.liquid`:**
+  - Custom left-to-right gradient overlay via `::after` (dark editorial left panel, fades to transparent right)
+  - Mobile override: vertical gradient (dark bottom) for readability on portrait images
+  - All slide text → Jost base font, H1 override → Cormorant Garamond `clamp(2.6rem–4.5rem)`, weight 500
+  - Primary button → burgundy `#6B1A2A`, hover `#8a2135`
+  - Secondary button → ghost white with hover fill
+  - Pagination dots → 7px circles, burgundy active state with scale(1.6)
+  - Navigation arrows → white, 0.65 opacity, full on hover
+  - Desktop padding boost → 72px inline-start at ≥1024px
+  - Autoplay progress bar → 3px burgundy line at section bottom, CSS positioned absolutely
+- **GSAP animations:**
+  - On initial load (0.7s delay): first slide content stagers up (`y: 32 → 0`, `opacity 0 → 1`, `stagger: 0.12s`)
+  - On slide change (detected via scroll event + 240ms debounce on `slideshow-slides`): same stagger animation fires for incoming slide
+  - Autoplay progress bar: `scaleX: 0 → 1` over the autoplay duration, resets on each slide change
+- **Note:** Slide images use existing uploaded files. Upload new Dubai-specific hero images via Shopify Admin → Files to replace the current placeholder images per slide.
+
+---
+
 ## Upcoming Tasks
 
-- [ ] Hero Section (image upload needed in admin)
+- [ ] Upload proper hero images for each slide (currently using existing uploaded files)
 - [ ] Category Pills
 - [ ] Collection / Category Page
 - [ ] Product Detail Page

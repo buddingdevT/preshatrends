@@ -78,9 +78,163 @@
     slide_count: section.blocks.size,
     slide_size: section.settings.slide_height
   %}
+  {%- if section.settings.autoplay -%}
+    <div class="presha-slide-progress">
+      <div class="presha-slide-progress-inner"></div>
+    </div>
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
+  /* ============================================================
+     Presha Trends — Slideshow Brand Overrides
+     ============================================================ */
+
+  /* Outer wrapper needs relative positioning for progress bar */
+  .slideshow-section {
+    position: relative;
+  }
+
+  /* Autoplay progress bar — thin burgundy line at bottom of slides */
+  .presha-slide-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.12);
+    z-index: 20;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .presha-slide-progress-inner {
+    height: 100%;
+    width: 100%;
+    background: #6B1A2A;
+    transform-origin: left center;
+    transform: scaleX(0);
+    will-change: transform;
+  }
+
+  /* Left-to-right gradient overlay — dark editorial left panel */
+  .slideshow-section .slide__image-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(8, 8, 8, 0.82) 0%,
+      rgba(8, 8, 8, 0.45) 45%,
+      rgba(8, 8, 8, 0.08) 72%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* All slide text — Jost as base font */
+  .slideshow-section .slide__content * {
+    font-family: 'Jost', sans-serif !important;
+  }
+
+  /* H1 headline — Cormorant Garamond */
+  .slideshow-section .slide__content h1 {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: clamp(2.6rem, 5vw, 4.5rem) !important;
+    font-weight: 500 !important;
+    line-height: 1.04 !important;
+    letter-spacing: -0.01em !important;
+    color: #ffffff !important;
+  }
+
+  /* Subtitle paragraphs */
+  .slideshow-section .slide__content p {
+    line-height: 1.55 !important;
+    max-width: 520px;
+  }
+
+  /* Primary button — burgundy fill */
+  .slideshow-section .slide__content .button:not(.button-secondary):not(.button-unstyled) {
+    background-color: #6B1A2A !important;
+    color: #ffffff !important;
+    border-color: #6B1A2A !important;
+    font-size: 0.8125rem !important;
+    letter-spacing: 0.05em !important;
+    transition: background-color 0.25s ease, border-color 0.25s ease !important;
+  }
+
+  .slideshow-section .slide__content .button:not(.button-secondary):not(.button-unstyled):hover {
+    background-color: #8a2135 !important;
+    border-color: #8a2135 !important;
+  }
+
+  /* Secondary button — ghost white */
+  .slideshow-section .slide__content .button-secondary {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.55) !important;
+    font-size: 0.8125rem !important;
+    letter-spacing: 0.05em !important;
+    transition: background-color 0.25s ease, border-color 0.25s ease !important;
+  }
+
+  .slideshow-section .slide__content .button-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  /* Pagination dots — brand styled */
+  .slideshow-section slideshow-dot-button {
+    width: 7px !important;
+    height: 7px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    border: none !important;
+    padding: 0 !important;
+    transition: background 0.3s ease, transform 0.3s ease !important;
+  }
+
+  .slideshow-section slideshow-dot-button[aria-current='true'],
+  .slideshow-section slideshow-dot-button.is-active {
+    background: #6B1A2A !important;
+    transform: scale(1.6) !important;
+  }
+
+  /* Navigation arrows — white, subtle */
+  .slideshow-section slideshow-arrows .slideshow-control {
+    color: #ffffff !important;
+    opacity: 0.65 !important;
+    transition: opacity 0.2s ease !important;
+  }
+
+  .slideshow-section slideshow-arrows .slideshow-control:hover {
+    opacity: 1 !important;
+  }
+
+  /* Desktop — increase left padding for editorial breathing room */
+  @media screen and (min-width: 1024px) {
+    .slideshow-section .slide__content {
+      padding-inline-start: 72px !important;
+    }
+  }
+
+  /* Mobile — vertical gradient, tighter padding */
+  @media screen and (max-width: 749px) {
+    .slideshow-section .slide__image-container::after {
+      background: linear-gradient(
+        to bottom,
+        rgba(8, 8, 8, 0.12) 0%,
+        rgba(8, 8, 8, 0.62) 55%,
+        rgba(8, 8, 8, 0.85) 100%
+      );
+    }
+
+    .slideshow-section .slide__content h1 {
+      font-size: clamp(2rem, 9vw, 2.8rem) !important;
+    }
+  }
+
   .slideshow-section {
     slideshow-arrows .slideshow-control:first-of-type {
       margin-inline-start: var(--padding-xs);
@@ -167,6 +321,70 @@
     }
   }
 {% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof gsap === 'undefined') return;
+
+    var section = document.querySelector('.shopify-section-{{ section.id }}');
+    if (!section) return;
+
+    var scroller = section.querySelector('slideshow-slides');
+    var slides = section.querySelectorAll('slideshow-slide');
+    var progressBar = section.querySelector('.presha-slide-progress-inner');
+    var autoplaySpeed = {{ section.settings.autoplay_speed | default: 5 }};
+    var progressTween = null;
+    var lastIndex = -1;
+
+    function getActiveIndex() {
+      if (!scroller || !slides.length) return 0;
+      var slideWidth = scroller.offsetWidth;
+      if (slideWidth === 0) return 0;
+      return Math.min(Math.round(scroller.scrollLeft / slideWidth), slides.length - 1);
+    }
+
+    function animateSlide(index) {
+      if (index === lastIndex) return;
+      lastIndex = index;
+
+      var slide = slides[index];
+      if (!slide) return;
+
+      /* Stagger text blocks up into place */
+      var items = slide.querySelectorAll('.group-block-content > *');
+      if (items.length) {
+        gsap.fromTo(
+          items,
+          { y: 32, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: 'power3.out', clearProps: 'transform,opacity' }
+        );
+      }
+
+      /* Progress bar */
+      if (progressBar && autoplaySpeed > 0) {
+        if (progressTween) progressTween.kill();
+        gsap.set(progressBar, { scaleX: 0 });
+        progressTween = gsap.to(progressBar, { scaleX: 1, duration: autoplaySpeed, ease: 'none' });
+      }
+    }
+
+    /* Initial animation — first slide after page settles */
+    gsap.delayedCall(0.7, function () {
+      animateSlide(0);
+    });
+
+    /* Detect slide change via scroll position on slideshow-slides */
+    if (scroller) {
+      var scrollTimer;
+      scroller.addEventListener('scroll', function () {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () {
+          animateSlide(getActiveIndex());
+        }, 240);
+      }, { passive: true });
+    }
+  });
+</script>
 
 {% schema %}
 {
