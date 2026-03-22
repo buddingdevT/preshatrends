@@ -110,6 +110,9 @@ Both folders are gitignored — not tracked in version control
 - Never push broken code to main
 - Keep a clean commit history — one logical change per commit
 - Any experimental work goes on a separate branch
+- **PROGRESS.md must be updated and appended after every completed task — no exceptions**
+  - Include: what was built, files changed, any notes for future reference
+  - Commit PROGRESS.md alongside the task files
 ```
 
 ---
