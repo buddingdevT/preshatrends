@@ -1,0 +1,221 @@
+{% comment %}
+  Presha Trends — Category Pills
+  Horizontal row of white cards (label + thumbnail) that float over
+  the bottom of the hero/slideshow section above.
+{% endcomment %}
+
+<div class="category-pills-section" id="CategoryPills-{{ section.id }}">
+  <div class="category-pills-track page-width">
+    {%- for block in section.blocks -%}
+      <a
+        href="{{ block.settings.link | default: '/collections/all' }}"
+        class="category-pill"
+        {{ block.shopify_attributes }}
+      >
+        <span class="category-pill__title">{{ block.settings.title }}</span>
+        <div class="category-pill__image-wrap">
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 200
+              | image_tag:
+                class: 'category-pill__image',
+                loading: 'eager',
+                widths: '100, 150, 200',
+                alt: block.settings.title
+            }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'category-pill__image category-pill__image--placeholder' }}
+          {%- endif -%}
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  /* ============================================================
+     Presha Trends — Category Pills
+  ============================================================ */
+
+  .category-pills-section {
+    position: relative;
+    z-index: 10;
+    margin-block-start: -56px;
+    padding-block-end: 56px;
+  }
+
+  .category-pills-section .page-width {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-block: 10px; /* room for card shadow */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-pills-section .page-width::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Individual pill card */
+  .category-pill {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+    padding: 16px 14px 16px 22px;
+    text-decoration: none;
+    color: inherit;
+    min-width: 180px;
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+    will-change: transform;
+  }
+
+  .category-pill:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.13);
+  }
+
+  .category-pill__title {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    line-height: 1.25;
+    flex: 1;
+  }
+
+  /* Thumbnail */
+  .category-pill__image-wrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f4f4f4;
+  }
+
+  .category-pill__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .category-pill__image--placeholder {
+    padding: 10px;
+    opacity: 0.3;
+  }
+
+  /* Mobile — horizontal scroll with peek of next card */
+  @media screen and (max-width: 749px) {
+    .category-pills-section {
+      margin-block-start: -36px;
+      padding-block-end: 40px;
+    }
+
+    .category-pills-section .page-width {
+      padding-inline: var(--page-margin);
+      max-width: none;
+      width: 100%;
+    }
+
+    .category-pill {
+      flex: 0 0 auto;
+      min-width: 155px;
+      max-width: 185px;
+      padding: 12px 12px 12px 16px;
+      gap: 10px;
+    }
+
+    .category-pill__image-wrap {
+      width: 58px;
+      height: 58px;
+    }
+
+    .category-pill__title {
+      font-size: 0.875rem;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var pills = document.querySelectorAll('#CategoryPills-{{ section.id }} .category-pill');
+    if (!pills.length) return;
+
+    gsap.fromTo(
+      pills,
+      { y: 28, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.09,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity',
+        scrollTrigger: {
+          trigger: '#CategoryPills-{{ section.id }}',
+          start: 'top 92%',
+          once: true
+        }
+      }
+    );
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Category Pills",
+  "tag": "section",
+  "class": "category-pills-outer",
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "pill",
+      "name": "Category Pill",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Category"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Thumbnail image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category Pills",
+      "blocks": [
+        { "type": "pill", "settings": { "title": "Trending Now" } },
+        { "type": "pill", "settings": { "title": "Pokemon Collectibles" } },
+        { "type": "pill", "settings": { "title": "Chrome Hearts" } },
+        { "type": "pill", "settings": { "title": "Loewe x On" } }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

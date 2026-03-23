@@ -147,10 +147,33 @@
 
 ---
 
+---
+
+### ✅ Task 6 — Category Pills
+**Commit:** `worked on category pills`
+**Files changed:**
+- `sections/category-pills.liquid` *(new file)*
+- `templates/index.json`
+
+**What was done:**
+- Created new `sections/category-pills.liquid` — horizontal row of white pill cards, each with a category label (left) and thumbnail image (right)
+- 4 default pills: Trending Now, Pokemon Collectibles, Chrome Hearts, Loewe x On
+- Cards float over the bottom of the hero slideshow via `margin-block-start: -56px` + `z-index: 10`
+- Card design: white bg `#ffffff`, `border-radius: 14px`, `box-shadow: 0 4px 24px rgba(0,0,0,0.09)`, hover lifts `translateY(-5px)` with deeper shadow
+- Typography: Jost 500, 15px, dark `#1a1a1a`
+- Thumbnails: 72×72px, `border-radius: 10px`, `object-fit: cover`
+- Desktop: flex row, cards stretch equally across page width
+- Mobile: horizontal scroll with `scrollbar-width: none` (hidden scrollbar), cards fixed at ~155px min-width for peek-next effect
+- GSAP: ScrollTrigger entrance — cards stagger up (`y: 28 → 0`, `opacity 0 → 1`, `stagger: 0.09s`) when section enters viewport
+- Section is block-based (up to 8 pills) — fully configurable in Shopify Admin theme editor
+- **Note:** Thumbnail images need to be uploaded and assigned per pill in Shopify Admin → Online Store → Customize → Category Pills section
+
+---
+
 ## Upcoming Tasks
 
-- [ ] Upload proper hero images for each slide (currently using existing uploaded files)
-- [ ] Category Pills
+- [ ] Upload proper hero images for each slide
+- [ ] Upload and assign thumbnail images for each category pill
 - [ ] Collection / Category Page
 - [ ] Product Detail Page
 - [ ] About Page
