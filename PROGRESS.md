@@ -275,11 +275,44 @@
 
 ---
 
+---
+
+### ✅ Task 11 — Header Redesign + Category Pills Rebuild (madkicks reference)
+**Commit:** `Header + Category Pills - solid white nav, uppercase links, dark pill cards`
+**Files changed:**
+- `sections/header.liquid` *(surgical CSS edit)*
+- `sections/category-pills.liquid` *(full rebuild)*
+- `ADMIN_TODO2.md` *(new file)*
+
+**What was done:**
+
+**Header:**
+- **Removed glassmorphism** — replaced `rgba(255,255,255,0.15)` + `backdrop-filter: blur(18px)` with always-solid `#ffffff` background and `1px rgba(0,0,0,0.08)` border-bottom
+- **Removed scroll JS** — no longer needed; header is solid white always (sticky behaviour handled by Horizon natively)
+- **Nav links** — changed from `0.8125rem / weight 400 / no uppercase` to `0.8rem / weight 500 / uppercase / letter-spacing: 0.06em` to match madkicks reference
+- GSAP entrance animation preserved
+
+**Category Pills:**
+- **Layout flipped** — thumbnail is now on the LEFT; text (`SHOP BY` label + category name) on the RIGHT
+- **Dark cards** — background changed from solid white to `rgba(18,18,18,0.84)` with `backdrop-filter: blur(6px)` and subtle border
+- **`SHOP BY` label added** — small `0.625rem` uppercase muted-white label above the bold category name
+- **No negative margin** — pills now sit directly below the hero (removed `-56px` margin-block-start overlap)
+- Hover: slightly more opaque background + `translateY(-3px)` lift
+- GSAP entrance: stagger timing tightened to `0.08s`
+
+**ADMIN_TODO2.md created** — see file for all required Shopify Admin actions.
+
+**Notes:**
+- Category pill thumbnail images still need to be uploaded and assigned in Shopify Admin → Customize
+- Pill links still point to `/collections/all` until real collections are set up
+
+---
+
 ## Upcoming Tasks
 
 - [ ] Upload proper hero images for each slide
-- [ ] Upload and assign thumbnail images for each category pill
-- [ ] Create footer navigation menus in Shopify Admin (footer-shop, footer-support, footer-company)
+- [ ] Upload and assign thumbnail images for each category pill (see ADMIN_TODO2.md)
+- [ ] Create navigation menus in Shopify Admin (main-menu, footer-shop, footer-support, footer-company) — see ADMIN_TODO2.md
 - [ ] Collection / Category Page
 - [ ] Product Detail Page
 - [ ] About Page

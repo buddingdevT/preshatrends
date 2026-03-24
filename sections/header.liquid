@@ -749,14 +749,19 @@
      Logo: Cormorant Garamond | Nav links: Jost | Hover: Burgundy
   ============================================================ */
 
-  /* Nav links: Jost, 13px, clean letter-spacing */
+  /* ============================================================
+     Presha Trends — Nav Links
+     Jost, uppercase, wider spacing — matches madkicks reference
+  ============================================================ */
+
+  /* Nav links: Jost, 12px, uppercase */
   .menu-list__link,
   .menu-list__link-title {
     font-family: 'Jost', sans-serif !important;
-    font-size: 0.8125rem !important;
-    font-weight: 400 !important;
-    letter-spacing: 0.04em !important;
-    text-transform: none !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
     transition: color 0.2s ease !important;
   }
 
@@ -794,26 +799,17 @@
   }
 
   /* ============================================================
-     Presha Trends — Glassmorphism Header
-     Background only: glass at page top → solid white after 80px scroll
-     Text and icons are unchanged in both states
+     Presha Trends — Solid White Header (madkicks-style)
+     Always solid white with thin border — no glassmorphism.
+     Sticky is handled by Horizon's built-in sticky logic.
   ============================================================ */
 
-  /* Glass state — background only, no text colour changes */
-  #header-component .header__group {
-    background: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(18px) !important;
-    -webkit-backdrop-filter: blur(18px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-    transition: background 0.35s ease, border-color 0.35s ease !important;
-  }
-
-  /* Solid white state — after scrolling 80px */
-  #header-component.pt-header--scrolled .header__group {
+  /* Solid white header — always, at-top and scrolled both identical */
+  #header-component .header__row {
     background: #ffffff !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
   }
 {% endstylesheet %}
 
@@ -830,24 +826,6 @@
       clearProps: 'transform,opacity'
     });
   });
-</script>
-
-{% comment %} Glassmorphism scroll behaviour — glass at top, solid white after 80px {% endcomment %}
-<script>
-(function () {
-  var header = document.getElementById('header-component');
-  if (!header) return;
-  var THRESHOLD = 80;
-  function updateHeader() {
-    if (window.scrollY > THRESHOLD) {
-      header.classList.add('pt-header--scrolled');
-    } else {
-      header.classList.remove('pt-header--scrolled');
-    }
-  }
-  window.addEventListener('scroll', updateHeader, { passive: true });
-  updateHeader();
-})();
 </script>
 
 {% unless request.design_mode %}
