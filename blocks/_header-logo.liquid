@@ -53,13 +53,13 @@
     class="header-logo__image-container header-logo__image-container--original"
     data-testid="header-logo"
   >
-    {% render 'image',
-      image: settings.logo,
-      class: 'header-logo__image',
-      height: settings.logo_height,
-      text_fallback: shop.name,
-      style: logo_style
-    %}
+    <img
+      src="{{ 'logo-text-black.png' | asset_url }}"
+      alt="{{ shop.name }}"
+      class="header-logo__image pt-logo-asset"
+      loading="eager"
+      fetchpriority="high"
+    >
   </span>
 
   {% if use_inverse_logo %}
@@ -136,6 +136,20 @@
 
   .header-logo__image-container--inverse {
     display: var(--header-logo-inverse-display, none);
+  }
+
+  /* Presha Trends — asset logo sizing */
+  img.pt-logo-asset {
+    height: 30px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    img.pt-logo-asset {
+      height: 24px;
+    }
   }
 {% endstylesheet %}
 
