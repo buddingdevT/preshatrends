@@ -198,6 +198,31 @@
 
 ---
 
+---
+
+### ✅ Task 8 — Footer Rebuild (to match Footer.png design ref)
+**Commit:** `Footer — rebuild to match Footer.png: logo-text-white, Instagram icon, 3 menu cols`
+**Files changed:**
+- `sections/footer.liquid` *(rebuilt)*
+- `sections/footer-group.json` *(rebuilt)*
+- `assets/logo-text-white.png` *(new — copied from designassets)*
+
+**What was done:**
+- **Replaced** the previous text-based "PRESHA TRENDS" heading with the actual `logo-text-white.png` image rendered via `{{ 'logo-text-white.png' | asset_url }}` directly in the Liquid template (asset_url required — Shopify image block can't reference theme assets)
+- **Brand column** is now fully custom HTML in `footer.liquid`: logo link → tagline → Instagram social icon
+- **Instagram icon** is a crisp inline SVG (rounded rect + circle + dot) rendered inside a circular bordered `<a>` tag matching the icon style in Footer.png
+- **3 menu columns** (SHOP, SUPPORT, COMPANY) are rendered via a Liquid loop over `block.type == 'menu'` blocks with placeholder links (hardcoded Shopify paths) when real menus aren't set up yet in Shopify Admin
+- **Grid layout:** `2fr 1fr 1fr 1fr` on desktop (≥990px), `1fr 1fr` on tablet, single column on mobile
+- **All typography** uses Jost — menu headings 0.6875rem bold uppercase with letter-spacing, links 0.9375rem at 65% white opacity
+- **GSAP ScrollTrigger entrance** preserved — stagger animation fires on all `.footer-content > *` columns
+- **Copyright bar** (`footer-utilities`) unchanged — keeps `© 2026 Presha Trends. ALL RIGHTS RESERVED. Powered by Hollowkraft`
+
+**Notes:**
+- Real Shopify Admin navigation menus (`footer-shop`, `footer-support`, `footer-company`) still need to be created — placeholder links are shown until then
+- Social icons: only Instagram is in the design. If more social platforms are added later, repeat the `.presha-footer-social-icon` pattern
+
+---
+
 ## Upcoming Tasks
 
 - [ ] Upload proper hero images for each slide
