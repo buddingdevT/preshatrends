@@ -1,41 +1,59 @@
 {% comment %}
   Presha Trends — Scrolling Marquee
-  Dark navy ticker band. Pure CSS animation.
-  JS handles smooth slow-down on hover (playbackRate 1 → 0.15 over 500ms).
-  Positioned directly below the hero slideshow + category pills.
+  Dark navy ticker band below hero + category pills.
+  CSS drives the animation — no external dependency.
+  JS handles smooth slow-down on hover via Web Animations API.
 {% endcomment %}
 
 {%- assign items = "PRESHA VERIFIED AUTHENTICITY|WORLDWIDE SHIPPING|TRUSTED GLOBAL RESALE PLATFORM|LUXURY RESTOCK|EXCLUSIVE DROPS|AUTHENTIC SNEAKERS" | split: "|" -%}
 
+{%- comment -%}
+  Keyframes defined inline so they are guaranteed available in-document
+  before the element renders — avoids any async stylesheet timing issue.
+{%- endcomment -%}
+<style>
+  @keyframes pt-mq-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+</style>
+
 <div class="pt-mq" id="pt-mq-{{ section.id }}" aria-hidden="true">
   <div class="pt-mq__inner">
-
-    {%- comment -%}Two identical strips — JS/CSS loops by shifting -50%{%- endcomment -%}
     {%- for pass in (1..2) -%}
       <div class="pt-mq__strip">
         {%- for item in items -%}
-          <span class="pt-mq__text">{{ item }}</span>
-          <span class="pt-mq__dot" aria-hidden="true">•</span>
+          <span class="pt-mq__text">{{ item }}</span><span class="pt-mq__dot" aria-hidden="true">•</span>
         {%- endfor -%}
       </div>
     {%- endfor -%}
-
   </div>
 </div>
 
 {% stylesheet %}
+  /* Contain the overflowing inner strip — clip is more aggressive than hidden */
   .pt-mq {
     background-color: #111929;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
     width: 100%;
+    max-width: 100%;
+    display: block;
   }
 
+  /* Two strips side-by-side; animation shifts left by 50% of total width = 1 strip */
   .pt-mq__inner {
     display: flex;
     align-items: center;
-    width: max-content;
     padding-block: 15px;
-    /* animation is set via JS after element is ready */
+    white-space: nowrap;
+    /* CSS animation — always running, JS only controls playback rate */
+    animation: pt-mq-scroll 32s linear infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pt-mq__inner { animation: none !important; }
   }
 
   .pt-mq__strip {
@@ -60,15 +78,7 @@
     color: rgba(255, 255, 255, 0.45);
     line-height: 1;
     flex-shrink: 0;
-  }
-
-  @keyframes pt-mq-scroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .pt-mq__inner { animation: none !important; }
+    padding-inline: 0.25rem;
   }
 {% endstylesheet %}
 
@@ -80,38 +90,31 @@
   var inner = el.querySelector('.pt-mq__inner');
   if (!inner) return;
 
-  /* Start the CSS animation */
-  inner.style.animation = 'pt-mq-scroll 32s linear infinite';
-
-  /* ── Smooth slow-down on hover ─────────────────────────────── */
-  var raf = null;
+  /* Smooth slow-down on hover via Web Animations API playbackRate */
+  var raf        = null;
   var currentRate = 1;
-  var targetRate  = 1;
-  var SLOW_RATE   = 0.12;   /* near-stop speed */
-  var EASE_MS     = 500;
+  var SLOW_RATE  = 0.12;
+  var EASE_MS    = 500;
 
   function lerpRate(from, to, startTime) {
     cancelAnimationFrame(raf);
     function tick(now) {
-      var t = Math.min((now - startTime) / EASE_MS, 1);
-      /* smoothstep easing */
-      var eased = t * t * (3 - 2 * t);
+      var t      = Math.min((now - startTime) / EASE_MS, 1);
+      var eased  = t * t * (3 - 2 * t);   /* smoothstep */
       currentRate = from + (to - from) * eased;
-      var anims = inner.getAnimations();
-      if (anims[0]) anims[0].updatePlaybackRate(currentRate);
+      var anim = inner.getAnimations()[0];
+      if (anim) anim.updatePlaybackRate(currentRate);
       if (t < 1) raf = requestAnimationFrame(tick);
     }
     raf = requestAnimationFrame(tick);
   }
 
   el.addEventListener('pointerenter', function () {
-    targetRate = SLOW_RATE;
-    lerpRate(currentRate, targetRate, performance.now());
+    lerpRate(currentRate, SLOW_RATE, performance.now());
   });
 
   el.addEventListener('pointerleave', function () {
-    targetRate = 1;
-    lerpRate(currentRate, targetRate, performance.now());
+    lerpRate(currentRate, 1, performance.now());
   });
 })();
 </script>
