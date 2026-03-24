@@ -42,7 +42,90 @@
       --tablet-last-row-count: {{ tablet_last_row_count }};
     "
   >
-    {% content_for 'blocks' %}
+    {%- comment -%}
+      Presha Trends: Custom brand column rendered first with asset-based logo.
+      Remaining menu columns render via standard Horizon blocks.
+    {%- endcomment -%}
+
+    {%- comment -%} Brand column — logo, tagline, social icon {%- endcomment -%}
+    <div class="presha-footer-brand">
+      <a href="{{ routes.root_url }}" class="presha-footer-logo-link" aria-label="Presha Trends">
+        <img
+          src="{{ 'logo-text-white.png' | asset_url }}"
+          alt="Presha Trends"
+          class="presha-footer-logo"
+          width="180"
+          height="auto"
+          loading="lazy"
+        >
+      </a>
+
+      <p class="presha-footer-tagline">
+        The ultimate destination for authenticated luxury streetwear and rare collectibles. Based in Dubai, shipping worldwide.
+      </p>
+
+      {%- comment -%} Social icons row {%- endcomment -%}
+      <div class="presha-footer-socials">
+        <a
+          href="https://www.instagram.com/preshatrends/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="presha-footer-social-icon"
+          aria-label="Instagram"
+        >
+          {%- comment -%} Instagram icon — matches the circular icon style in Footer.png {%- endcomment -%}
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4.5"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    {%- comment -%} Menu columns — rendered from footer-group.json blocks, skip brand_col_group {%- endcomment -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'menu' -%}
+        <div class="presha-footer-menu-col" {{ block.shopify_attributes }}>
+          <p class="presha-footer-menu-heading">{{ block.settings.heading }}</p>
+          {%- assign menu = linklists[block.settings.menu] -%}
+          {%- if menu != blank -%}
+            <ul class="presha-footer-menu-list">
+              {%- for link in menu.links -%}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            {%- comment -%} Placeholder links until menus are created in Shopify Admin {%- endcomment -%}
+            {%- if block.settings.heading == 'SHOP' -%}
+              <ul class="presha-footer-menu-list">
+                <li><a href="/collections/new-arrivals">New Arrivals</a></li>
+                <li><a href="/collections/sneakers">Sneakers</a></li>
+                <li><a href="/collections/apparel">Apparel</a></li>
+                <li><a href="/collections/accessories">Accessories</a></li>
+                <li><a href="/collections/collectibles">Collectibles</a></li>
+              </ul>
+            {%- elsif block.settings.heading == 'SUPPORT' -%}
+              <ul class="presha-footer-menu-list">
+                <li><a href="/pages/authentication">Authentication</a></li>
+                <li><a href="/policies/shipping-policy">Shipping Policy</a></li>
+                <li><a href="/policies/refund-policy">Returns &amp; Refunds</a></li>
+                <li><a href="/pages/track-order">Track Order</a></li>
+                <li><a href="/pages/contact">Contact Us</a></li>
+              </ul>
+            {%- elsif block.settings.heading == 'COMPANY' -%}
+              <ul class="presha-footer-menu-list">
+                <li><a href="/pages/our-story">Our Story</a></li>
+                <li><a href="/blogs/journal">Journal</a></li>
+                <li><a href="/pages/careers">Careers</a></li>
+                <li><a href="/policies/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/policies/terms-of-service">Terms of Service</a></li>
+              </ul>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
   </div>
 </div>
 
@@ -84,87 +167,129 @@
       grid-column: 1 / -1;
     }
   }
-  /* ── Presha Trends Footer Brand Styles ── */
+  /* ── Presha Trends Footer — custom layout to match Footer.png ── */
 
-  /* Dark navy background for footer (scoped to footer wrapper) */
+  /* Dark navy background */
   footer.section-wrapper > .section-background.color-scheme-3,
   footer.section-wrapper > .section.color-scheme-3 {
     background-color: #0f1117;
   }
 
-  /* Brand name — first child column h4 = PRESHA TRENDS */
-  .footer-content > :first-child h4 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #ffffff;
-    margin: 0 0 8px;
+  /* Override grid: 4 columns — brand (wider) + 3 equal menu cols */
+  @media screen and (min-width: 990px) {
+    .footer-content {
+      grid-template-columns: 2fr 1fr 1fr 1fr !important;
+      align-items: start;
+    }
   }
 
-  /* Tagline — first child column p */
-  .footer-content > :first-child p {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.8125rem;
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.5;
-    margin: 0 0 24px;
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .footer-content {
+      grid-template-columns: 1fr 1fr !important;
+    }
   }
 
-  /* Menu headings */
-  .footer-content .menu__heading__default,
-  .footer-content summary.menu__heading span:first-child {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
+  /* ── Brand column ── */
+  .presha-footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
-  /* Menu links */
-  .footer-content .list-menu__item,
-  .footer-content .list-menu__item a {
+  .presha-footer-logo-link {
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .presha-footer-logo {
+    width: 180px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .presha-footer-tagline {
     font-family: 'Jost', sans-serif;
     font-size: 0.875rem;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition: color 0.2s ease;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 32ch;
   }
 
-  .footer-content .list-menu__item:hover,
-  .footer-content .list-menu__item a:hover {
-    color: #ffffff;
-  }
-
-  /* Social icons — circular style (in brand column) */
-  .footer-content .social-links__list {
+  /* ── Social icons ── */
+  .presha-footer-socials {
     display: flex;
-    gap: 12px;
+    gap: 10px;
+    align-items: center;
     margin-top: 4px;
-    padding: 0;
-    list-style: none;
   }
 
-  .footer-content .social-links__list a {
+  .presha-footer-social-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: rgba(255, 255, 255, 0.75);
-    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: border-color 0.22s ease, color 0.22s ease, background 0.22s ease;
+    flex-shrink: 0;
   }
 
-  .footer-content .social-links__list a:hover {
-    border-color: #6B1A2A;
-    background: #6B1A2A;
+  .presha-footer-social-icon:hover {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .presha-footer-social-icon svg {
+    display: block;
+  }
+
+  /* ── Menu columns ── */
+  .presha-footer-menu-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .presha-footer-menu-heading {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0 0 20px;
+    padding: 0;
+  }
+
+  .presha-footer-menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .presha-footer-menu-list li a {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    line-height: 1;
+  }
+
+  .presha-footer-menu-list li a:hover {
     color: #ffffff;
   }
+
 {% endstylesheet %}
 
 <script>
