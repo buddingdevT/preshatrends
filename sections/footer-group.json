@@ -56,7 +56,7 @@
             "brand_text": {
               "type": "text",
               "settings": {
-                "text": "<p class=\"footer-brand-name\">PRESHA TRENDS</p><p class=\"footer-tagline\">Luxury streetwear &amp; rare sneakers. Dubai.</p>",
+                "text": "<h4>PRESHA TRENDS</h4><p>Luxury streetwear &amp; rare sneakers. Dubai.</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
