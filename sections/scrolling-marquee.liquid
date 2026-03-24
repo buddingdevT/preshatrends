@@ -1,0 +1,131 @@
+{% comment %}
+  Presha Trends — Scrolling Marquee
+  Dark navy ticker band. Pure CSS animation.
+  JS handles smooth slow-down on hover (playbackRate 1 → 0.15 over 500ms).
+  Positioned directly below the hero slideshow + category pills.
+{% endcomment %}
+
+{%- assign items = "PRESHA VERIFIED AUTHENTICITY|WORLDWIDE SHIPPING|TRUSTED GLOBAL RESALE PLATFORM|LUXURY RESTOCK|EXCLUSIVE DROPS|AUTHENTIC SNEAKERS" | split: "|" -%}
+
+<div class="pt-mq" id="pt-mq-{{ section.id }}" aria-hidden="true">
+  <div class="pt-mq__inner">
+
+    {%- comment -%}Two identical strips — JS/CSS loops by shifting -50%{%- endcomment -%}
+    {%- for pass in (1..2) -%}
+      <div class="pt-mq__strip">
+        {%- for item in items -%}
+          <span class="pt-mq__text">{{ item }}</span>
+          <span class="pt-mq__dot" aria-hidden="true">•</span>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .pt-mq {
+    background-color: #111929;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .pt-mq__inner {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    padding-block: 15px;
+    /* animation is set via JS after element is ready */
+  }
+
+  .pt-mq__strip {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .pt-mq__text {
+    font-family: 'Jost', var(--font-body--family, sans-serif);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    white-space: nowrap;
+    padding-inline: 1.25rem;
+  }
+
+  .pt-mq__dot {
+    font-size: 0.4rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  @keyframes pt-mq-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pt-mq__inner { animation: none !important; }
+  }
+{% endstylesheet %}
+
+<script>
+(function () {
+  var el = document.getElementById('pt-mq-{{ section.id }}');
+  if (!el) return;
+
+  var inner = el.querySelector('.pt-mq__inner');
+  if (!inner) return;
+
+  /* Start the CSS animation */
+  inner.style.animation = 'pt-mq-scroll 32s linear infinite';
+
+  /* ── Smooth slow-down on hover ─────────────────────────────── */
+  var raf = null;
+  var currentRate = 1;
+  var targetRate  = 1;
+  var SLOW_RATE   = 0.12;   /* near-stop speed */
+  var EASE_MS     = 500;
+
+  function lerpRate(from, to, startTime) {
+    cancelAnimationFrame(raf);
+    function tick(now) {
+      var t = Math.min((now - startTime) / EASE_MS, 1);
+      /* smoothstep easing */
+      var eased = t * t * (3 - 2 * t);
+      currentRate = from + (to - from) * eased;
+      var anims = inner.getAnimations();
+      if (anims[0]) anims[0].updatePlaybackRate(currentRate);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    }
+    raf = requestAnimationFrame(tick);
+  }
+
+  el.addEventListener('pointerenter', function () {
+    targetRate = SLOW_RATE;
+    lerpRate(currentRate, targetRate, performance.now());
+  });
+
+  el.addEventListener('pointerleave', function () {
+    targetRate = 1;
+    lerpRate(currentRate, targetRate, performance.now());
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Scrolling Marquee",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "presets": [
+    {
+      "name": "Scrolling Marquee"
+    }
+  ]
+}
+{% endschema %}

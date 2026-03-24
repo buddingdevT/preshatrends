@@ -1140,42 +1140,15 @@
         "padding-block-end": 0
       }
     },
-    "marquee_presha": {
-      "type": "marquee",
-      "blocks": {
-        "text1": {
-          "type": "text",
-          "settings": {
-            "text": "<p>PRESHA VERIFIED AUTHENTICITY • WORLDWIDE SHIPPING • TRUSTED GLOBAL RESALE PLATFORM • LUXURY RESTOCK • EXCLUSIVE DROPS • AUTHENTIC SNEAKERS •</p>",
-            "type_preset": "custom",
-            "font": "var(--font-body--family)",
-            "font_size": "0.8125rem",
-            "letter_spacing": "wider",
-            "case": "uppercase",
-            "wrap": "nowrap",
-            "width": "fit-content",
-            "color": "#ffffff",
-            "font_weight": "700"
-          }
-        }
-      },
-      "block_order": [
-        "text1"
-      ],
-      "settings": {
-        "custom_bg_color": "#111929",
-        "movement_direction": "reverse",
-        "color_scheme": "scheme-3",
-        "padding-block-start": 14,
-        "padding-block-end": 14,
-        "gap_between_elements": 0
-      }
+    "scrolling_marquee_pt": {
+      "type": "scrolling-marquee",
+      "settings": {}
     }
   },
   "order": [
     "slideshow_thBVtw",
     "category_pills_pTXsWa",
-    "marquee_presha",
+    "scrolling_marquee_pt",
     "hero_jVaWmY",
     "1769647631664937e5",
     "blocks_fdCed7",

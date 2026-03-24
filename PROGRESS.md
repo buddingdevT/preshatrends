@@ -226,25 +226,24 @@
 ---
 
 ### ✅ Task 9 — Scrolling Marquee
-**Commit:** `Scrolling Marquee - dark navy ticker band directly below hero`
+**Commit:** `Scrolling Marquee - standalone dark navy ticker with CSS animation and JS slow-down`
 **Files changed:**
-- `sections/marquee.liquid` *(surgical edit)*
+- `sections/scrolling-marquee.liquid` *(new file)*
+- `sections/marquee.liquid` *(surgical edit — added custom_bg_color setting)*
+- `sections/category-pills.liquid` *(padding-block-end reduced to 24px for flush layout)*
 - `templates/index.json`
 
 **What was done:**
-- Used the Horizon built-in `marquee.liquid` + `marquee.js` (handles auto-duplication, speed, resize, slow-on-hover — no need to rewrite)
-- Added `custom_bg_color` color setting to `marquee.liquid` — when set, applies as inline `background-color` override on both the `.section-background` div and the `marquee-component` element
-- Configured in `index.json` as `marquee_presha`:
-  - `custom_bg_color: #111929` (dark navy matching design ref)
-  - `color_scheme: scheme-3` (dark base fallback)
-  - Text block: Jost, `0.8125rem`, uppercase, wider letter-spacing, white `#ffffff`
-  - Text content: PRESHA VERIFIED AUTHENTICITY • WORLDWIDE SHIPPING • TRUSTED GLOBAL RESALE PLATFORM • LUXURY RESTOCK • EXCLUSIVE DROPS • AUTHENTIC SNEAKERS •
-  - `padding-block: 14px`, direction: forward
-- Positioned directly after `slideshow_thBVtw` in index.json order
+- Built standalone `sections/scrolling-marquee.liquid` — avoids Horizon marquee.js dependency chain (IntersectionObserver + speed calc) that was silently failing
+- Background `#111929` dark navy; Jost 700, 0.8125rem, letter-spacing 0.12em, uppercase white; half-opacity bullet separators
+- Two identical text strips in HTML; CSS `@keyframes pt-mq-scroll` shifts `-50%` for seamless infinite loop; animation started via JS after element is ready
+- Smooth slow-down on hover: JS lerps `playbackRate` from 1 → 0.12 over 500ms (smoothstep easing) using Web Animations API `updatePlaybackRate`; speeds back up on `pointerleave`
+- Respects `prefers-reduced-motion`
+- Positioned after `category_pills_pTXsWa` in `index.json` (slideshow → pills → marquee)
+- `category-pills` `padding-block-end` reduced from 56px → 24px so marquee sits flush below
 
 **Notes:**
-- No admin actions required
-- To edit marquee text: Shopify Admin → Online Store → Customize → Scrolling Marquee → Text block
+- Marquee text is hard-coded in the section Liquid template (not theme-editor-configurable) — edit directly in `sections/scrolling-marquee.liquid` if copy needs to change
 
 ---
 
