@@ -247,6 +247,34 @@
 
 ---
 
+---
+
+### ✅ Task 10 — Marquee Fix + Global Overflow + Glassmorphism Header
+**Commit:** `Header + Marquee - fix horizontal scroll, marquee animation, glassmorphism nav`
+**Files changed:**
+- `sections/scrolling-marquee.liquid`
+- `layout/theme.liquid`
+- `sections/header.liquid`
+
+**What was done:**
+
+**Marquee fixes:**
+- Root cause found: `overflow-x: clip` + `overflow-y: visible` is an invalid CSS combination — per spec the other axis computes to `auto`, creating a scroll context instead of clipping. Fixed to `overflow: hidden` (both axes, valid)
+- Added `width: max-content` back to `.pt-mq__inner` — this is critical for the `translateX(-50%)` animation to work correctly (without it, the flex container stretches to 100vw and the shift only moves by 50vw, not one full strip)
+
+**Global horizontal scroll fix:**
+- Added `style="overflow-x: hidden"` to the `<html>` element in `layout/theme.liquid` — global catch-all preventing any section from causing page-level horizontal scroll
+
+**Glassmorphism header:**
+- Added CSS + JS to `sections/header.liquid`
+- At page top: `rgba(255,255,255,0.08)` background + `backdrop-filter: blur(18px)` + white text/icons
+- After scrolling 80px: transitions to solid `#ffffff` + dark text (existing scheme-1 colours)
+- Smooth `0.35s ease` transition on all properties
+- JS scroll listener toggles `.pt-header--scrolled` class on `#header-component` — passive listener for performance
+- Burgundy hover on nav links preserved in both states
+
+---
+
 ## Upcoming Tasks
 
 - [ ] Upload proper hero images for each slide

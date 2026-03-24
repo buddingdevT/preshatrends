@@ -801,6 +801,56 @@
     color: #6B1A2A !important;
     opacity: 1 !important;
   }
+
+  /* ============================================================
+     Presha Trends — Glassmorphism Header
+     Glass at page top → solid white after 80px scroll
+  ============================================================ */
+
+  /* Glass state (default — at top of page) */
+  #header-component .header__group {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    transition: background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease !important;
+  }
+
+  /* White text + logo in glass state */
+  #header-component:not(.pt-header--scrolled) a.header-logo,
+  #header-component:not(.pt-header--scrolled) .menu-list__link,
+  #header-component:not(.pt-header--scrolled) .menu-list__link-title,
+  #header-component:not(.pt-header--scrolled) .header-actions__icon,
+  #header-component:not(.pt-header--scrolled) .header-actions__wishlist {
+    color: #ffffff !important;
+  }
+
+  /* Wishlist + action icons white in glass state */
+  #header-component:not(.pt-header--scrolled) .header-actions__icon svg,
+  #header-component:not(.pt-header--scrolled) .header-actions__wishlist svg {
+    stroke: #ffffff !important;
+    fill: none !important;
+  }
+
+  /* Solid white state — after scrolling 80px */
+  #header-component.pt-header--scrolled .header__group {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  }
+
+  /* Dark text restored in solid state */
+  #header-component.pt-header--scrolled a.header-logo,
+  #header-component.pt-header--scrolled .menu-list__link,
+  #header-component.pt-header--scrolled .menu-list__link-title {
+    color: inherit !important;
+  }
+
+  /* Nav hover: burgundy preserved in both states */
+  #header-component.pt-header--scrolled .menu-list .menu-list__list-item:where(:hover, :focus-within) .menu-list__link {
+    color: #6B1A2A !important;
+  }
 {% endstylesheet %}
 
 {% comment %} GSAP: Header entrance — subtle fade + drop after announcement bar {% endcomment %}
@@ -816,6 +866,24 @@
       clearProps: 'transform,opacity'
     });
   });
+</script>
+
+{% comment %} Glassmorphism scroll behaviour — glass at top, solid white after 80px {% endcomment %}
+<script>
+(function () {
+  var header = document.getElementById('header-component');
+  if (!header) return;
+  var THRESHOLD = 80;
+  function updateHeader() {
+    if (window.scrollY > THRESHOLD) {
+      header.classList.add('pt-header--scrolled');
+    } else {
+      header.classList.remove('pt-header--scrolled');
+    }
+  }
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
+})();
 </script>
 
 {% unless request.design_mode %}
