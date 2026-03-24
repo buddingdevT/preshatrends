@@ -8,13 +8,19 @@
 
 {% assign gap_between_elements = section.settings.gap_between_elements %}
 
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+{%- assign has_custom_bg = false -%}
+{%- if section.settings.custom_bg_color != blank and section.settings.custom_bg_color != 'rgba(0,0,0,0)' -%}
+  {%- assign has_custom_bg = true -%}
+{%- endif -%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"{% if has_custom_bg %} style="background-color: {{ section.settings.custom_bg_color }};"{% endif %}></div>
 <marquee-component
   class="section spacing-style gap-style color-{{ section.settings.color_scheme }}"
   style="
     {%- render 'spacing-style', settings: section.settings %};
     {% render 'gap-style', value: gap_between_elements, name: 'marquee-gap' %}
     --marquee-direction: {{ section.settings.movement_direction }};
+    {%- if has_custom_bg -%}background-color: {{ section.settings.custom_bg_color }};{%- endif -%}
   "
   data-speed-factor="25"
   data-movement-direction="{{ section.settings.movement_direction }}"
@@ -111,6 +117,12 @@
     }
   ],
   "settings": [
+    {
+      "type": "color",
+      "id": "custom_bg_color",
+      "label": "Custom background color",
+      "info": "Overrides the color scheme background. Leave blank to use color scheme."
+    },
     {
       "type": "select",
       "id": "movement_direction",
