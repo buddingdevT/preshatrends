@@ -84,7 +84,116 @@
       grid-column: 1 / -1;
     }
   }
+  /* ── Presha Trends Footer Brand Styles ── */
+
+  /* Dark navy background for footer (scoped to footer wrapper) */
+  footer.section-wrapper > .section-background.color-scheme-3,
+  footer.section-wrapper > .section.color-scheme-3 {
+    background-color: #0f1117;
+  }
+
+  /* Brand name — Cormorant Garamond, large uppercase */
+  .footer-brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0 0 8px;
+  }
+
+  /* Tagline */
+  .footer-tagline {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+
+  /* Menu headings */
+  .footer-content .menu__heading__default,
+  .footer-content summary.menu__heading span:first-child {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  /* Menu links */
+  .footer-content .list-menu__item,
+  .footer-content .list-menu__item a {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-content .list-menu__item:hover,
+  .footer-content .list-menu__item a:hover {
+    color: #ffffff;
+  }
+
+  /* Social icons — circular style (in brand column) */
+  .footer-content .social-links__list {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-content .social-links__list a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.75);
+    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+  }
+
+  .footer-content .social-links__list a:hover {
+    border-color: #6B1A2A;
+    background: #6B1A2A;
+    color: #ffffff;
+  }
 {% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    var footerCols = document.querySelectorAll('.footer-content > *');
+    if (!footerCols.length) return;
+
+    gsap.fromTo(
+      footerCols,
+      { y: 32, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity',
+        scrollTrigger: {
+          trigger: '.footer-content',
+          start: 'top 90%',
+          once: true
+        }
+      }
+    );
+  });
+</script>
 
 {% schema %}
 {

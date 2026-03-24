@@ -170,13 +170,41 @@
 
 ---
 
+---
+
+### ✅ Task 7 — Footer
+**Commit:** `worked on footer section`
+**Files changed:**
+- `sections/footer-group.json` *(full rebuild)*
+- `blocks/footer-copyright.liquid`
+- `sections/footer.liquid`
+- `sections/footer-utilities.liquid`
+
+**What was done:**
+- **Completely rebuilt** the main footer (`footer_m9NzUG`) — replaced old newsletter/email content with a 4-column layout:
+  - Column 1: Brand group — "PRESHA TRENDS" (Cormorant Garamond, uppercase) + tagline + Instagram icon (circular)
+  - Column 2: SHOP menu (`footer-shop` handle)
+  - Column 3: SUPPORT menu (`footer-support` handle)
+  - Column 4: COMPANY menu (`footer-company` handle)
+- **Color scheme:** `scheme-3` (dark base), overridden to `#0f1117` dark navy via scoped CSS
+- **Social links:** Instagram-only in brand column; social block removed from utilities bar
+- **Menu blocks:** `show_as_accordion: true` — menus collapse on mobile with caret toggle
+- **Copyright block:** Hardcoded to `© 2026 Presha Trends. ALL RIGHTS RESERVED. Powered by Hollowkraft` — removed dynamic year and "Powered by Shopify" logic
+- **Footer utilities:** `scheme-3` dark background, `divider_thickness: 1` (thin rgba border top), Jost copyright text at 40% white opacity
+- **Brand CSS added to `sections/footer.liquid`:** Cormorant brand heading, Jost menu headings (11px uppercase muted), Jost menu links (14px 70% white), circular social icon hover (burgundy fill)
+- **CSS added to `sections/footer-utilities.liquid`:** Dark navy bg, muted white copyright and policy links
+- **GSAP ScrollTrigger entrance:** Footer columns stagger in (`y: 32 → 0`, `opacity 0 → 1`, `stagger: 0.1s`) when footer enters viewport
+- **Action required in Shopify Admin → Navigation:** Create 3 menus with handles `footer-shop`, `footer-support`, `footer-company` — until created, those columns show no links
+
+---
+
 ## Upcoming Tasks
 
 - [ ] Upload proper hero images for each slide
 - [ ] Upload and assign thumbnail images for each category pill
+- [ ] Create footer navigation menus in Shopify Admin (footer-shop, footer-support, footer-company)
 - [ ] Collection / Category Page
 - [ ] Product Detail Page
 - [ ] About Page
 - [ ] Cart Page
 - [ ] Account Page
-- [ ] Footer

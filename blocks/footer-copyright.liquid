@@ -11,11 +11,7 @@
   {{ block.shopify_attributes }}
 >
   <span class="footer-utilities__text">
-    &copy; {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url -}}
-    {%- if block_settings.show_powered_by -%}
-      , {{ powered_by_link }}
-    {%- endif -%}
+    &copy; 2026 {{ shop.name | link_to: routes.root_url }}. ALL RIGHTS RESERVED. Powered by Hollowkraft
   </span>
 </div>
 
